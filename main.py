@@ -93,14 +93,18 @@ def check_nitro(link):
     # Code with valid response (claimed, valid, expired)
     if req.status_code == 200:
         response = req.json()
+        nitro_type = response.get('store_listing').get('sku').get('slug')
         expires_at = response.get('expires_at')
-
+        if nitro_type == "nitro-basic":
+            nitro_type = "NITRO BASIC"
+        elif nitro_type == "nitro":
+            nitro_type == "NITRO BOOST"
         # Expired Nitro Code
         if expires_at and time_to_check > expires_at:
             save_in("data/invalids.txt", link)
             invalids += 1
             return_code = f"{T}[{R}INVALID{T}]{W}"
-            print(f"{sprint(rntime())}{R}[X] Nitro Code: {W}{code} {return_code} {W}Time Taken: {end - start:.2f}")
+            print(f"{sprint(rntime())}{R}[X] Nitro Code: {W}{code} {return_code} {W}[{M}{nitro_type}{T}]{W} Time Taken: {end - start:.2f}")
             return
         
         # Claimed Nitro Code
@@ -108,7 +112,7 @@ def check_nitro(link):
             save_in("data/claimed.txt", link)
             claimed += 1
             return_code = f"{T}[{Y}CLAIMED{T}]{W}"
-            print(f"{sprint(rntime())}{Y}[!] Nitro Code: {W}{code} {return_code} {W}Time Taken: {end - start:.2f}")
+            print(f"{sprint(rntime())}{Y}[!] Nitro Code: {W}{code} {return_code} {W}[{M}{nitro_type}{T}]{W} Time Taken: {end - start:.2f}")
             return
         
         # Claimed Nitro Code too
@@ -116,7 +120,7 @@ def check_nitro(link):
             save_in("data/claimed.txt", link)
             claimed += 1
             return_code = f"{T}[{Y}CLAIMED{T}]{W}"
-            print(f"{sprint(rntime())}{Y}[!] Nitro Code: {W}{code} {return_code} {W}Time Taken: {end - start:.2f}")
+            print(f"{sprint(rntime())}{Y}[!] Nitro Code: {W}{code} {return_code} {W}[{M}{nitro_type}{T}]{W} Time Taken: {end - start:.2f}")
             return
         
         # Valid and not claimed nitro code
@@ -124,7 +128,7 @@ def check_nitro(link):
             save_in("data/valids.txt", link)
             valids += 1
             return_code = f"{T}[{G}VALID{T}]{W}"
-            print(f"{sprint(rntime())}{G}[+] Nitro Code: {W}{code} {return_code} {W}Time Taken: {end - start:.2f}")
+            print(f"{sprint(rntime())}{G}[+] Nitro Code: {W}{code} {return_code} {W}[{M}{nitro_type}{T}]{W} Time Taken: {end - start:.2f}")
             return
         
     # Nitro Code doesn't exist (Unknown code for api)
